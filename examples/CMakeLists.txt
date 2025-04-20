@@ -1,8 +1,9 @@
-# Опциональная сборка примеров
-option(BUILD_EXAMPLES "Build examples" ON)
+set(KURO_EXAMPLES
+    tcp_server_example
+    log_example
+)
 
-if(BUILD_EXAMPLES)
-    add_executable(log_example log_example.cpp)
-    target_link_libraries(log_example PRIVATE kuro_logger)
-    target_include_directories(log_example PRIVATE ${CMAKE_SOURCE_DIR}/include)
-endif()
+foreach(example_name ${KURO_EXAMPLES})
+    add_executable(${example_name} ${example_name}.cpp)
+    target_link_libraries(${example_name} PRIVATE kuro_net kuro_logger)
+endforeach()

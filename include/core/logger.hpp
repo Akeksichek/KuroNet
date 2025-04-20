@@ -14,10 +14,35 @@ namespace kuro {
     namespace detail {
         inline std::string current_time();
     } // namespace detail
+    /**
+     * @brief Класс отвечающий за логирование и маркировку уведомлений
+     * 
+     * Пример использования:
+     * @code
+     * Logger::log(Logger::Level::Info, "Some message");
+     * @endcode
+     */
     class Logger {
     public:
         enum class Level { Debug, Info, Warning, Error };
         
+        /**
+         * @brief Устанавливает глобальный уровень логирования
+         * 
+         * Сообщения с уровнем ВЫШЕ установленного будут игнорироваться.
+         * По умолчанию: Level::Info (показываются Info, Warning, Error).
+         * 
+         * @param level Новый уровень фильтрации (Debug|Info|Warning|Error)
+         * 
+         * @note Пример:
+         * @code
+         * // В продакшене - только ошибки
+         * Logger::set_level(Logger::Level::Error);
+         * 
+         * // В дебаге - всё
+         * Logger::set_level(Logger::Level::Debug);
+         * @endcode
+         */
         static void set_level(Level level);
 
         static void log(Level level, const std::string& message);
