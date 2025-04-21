@@ -2,7 +2,7 @@
 **Лёгкий асинхронный чат на C++/Boost.Asio**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/Akeksichek/KuroNet/build.yml?label=CI)](https://github.com/Akeksichek/KuroNet/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Akeksichek/KuroNet/build.yml?label=CI)](https://github.com/Akeksichek/KuroNet)
 [![CMake](https://img.shields.io/badge/CMake-3.15+-brightgreen.svg)](https://cmake.org)
 
 ## Установка зависимостей {#install}
@@ -33,15 +33,13 @@ cmake .. && make
 ## История изменений
 
 ### v0.3.0 (текущая) - 2024-04-21
- - **Добавлено**
-  - **Менеджер сессий**:
+- **Добавлено**
   - Методы `add_client()` и `remove_client()` для управления подключениями
   - Потокобезопасность через `std::mutex` (клиенты не "теряются" в многопоточной среде)
- - **Изменено**:
-  - **Структура проекта**:
+- **Изменено**:
   - Сессии клиентов вынесены в отдельный класс (`ClientSessionManager`)
   - Обновлена документация
- - **Исправлено**
+- **Исправлено**
   - Возможные race condition при параллельном доступе к списку клиентов
 
 ### v0.2.0
