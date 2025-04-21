@@ -11,6 +11,13 @@
 chmod +x install_deps.sh
 ./install_deps.sh
 ```
+```markdown
+Автоустановщик поддерживает только:
+- Ubuntu 20.04+
+- Debian 11+
+- Arch Linux (последние версии)
+
+```
 
 ## Сборка проекта {#build}
 ```bash
