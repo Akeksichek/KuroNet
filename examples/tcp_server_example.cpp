@@ -3,21 +3,21 @@
 #include <thread>
 
 int main() {
-    const uint16_t port = 12345;
+    const uint16_t port = 12345; //обьявление порта
 
-    kuro::Logger::set_level(kuro::Logger::Level::Debug);
+    kuro::Logger::set_level(kuro::Logger::Level::Debug); // фильтрция логов
 
-    kuro::TCPServer server(port);
-
-    server.start();
+    kuro::TCPServer server(port); // инициализация сервера
 
     std::thread io_thread([](){
-        kuro::Session::get_instance().ioc_.run();
+        kuro::Session::get_instance().ioc_.run(); // запуск контекста в отдельном потоке для boost
     });
+    
+    server.start(); //запуск сервера
 
     kuro::Logger::log(kuro::Logger::Level::Info,
-        "Server started on port " + std::to_string(port));
+        "Server started on port " + std::to_string(port)); // уведолмение о успешном запуске :)
     
-    io_thread.join();
+    io_thread.join(); // ожидание завершения потока с контекстом
     return 0;
 }

@@ -1,4 +1,7 @@
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/asio/write.hpp>
+#include <boost/asio/read_until.hpp>
 
 #include <memory>
 
@@ -7,14 +10,28 @@
 
 namespace kuro
 {
+
     /**
-     * @brief Асинхронный TCP-сервер на Boost.Asio
+     * @class TCPServer
+     * @brief Асинхронный TCP-сервер для чата
+     *  
+     * Пока работает только с IPv4, но планируется и IPv6.
      * 
-     * Основные возможности:
-     * - Приём подключений с логированием
-     * - Остановка/перезапуск по требованию
+     * ## Как это работает?
+     * 1. Сервер создаётся на указанном порту (`::start()`)
+     * 2. В фоне начинает принимать подключения (`do_accept()`)
+     * 3. Для каждого клиента создаётся сессия (`on_client_connected()`)
+     * 4. Если что-то идёт не так — логирует и мягко завершает работу
      * 
-     * @warning Не потокобезопасен (используйте мьютекс для вызовов из разных потоков)
+     * @warning Пока не умеет в HTTP.
+     *          Не потокобезопасен.
+     * 
+     * @example
+     * // Минимальный пример запуска:
+     * kuro::TCPServer server(8080);
+     * server.start(); // Поехали!
+     * 
+     * @version 0.3.0 (KuroNet)
      */
     class TCPServer
     {
@@ -23,6 +40,7 @@ namespace kuro
         boost::asio::ip::tcp::acceptor acceptor;
 
         void do_accept();
+        void on_client_connected(std::shared_ptr<boost::asio::ip::tcp::socket> socket);
 
     public:
         /**
