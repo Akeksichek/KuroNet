@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
-project(KuroNet VERSION 0.2.0)
+project(MyProject VERSION )
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Boost REQUIRED)
 
-add_library(kuro_logger STATIC 
+add_library(kuro_core STATIC 
     src/core/logger.cpp
+    src/core/UniqueUtils.cpp
 )
-target_include_directories(kuro_logger PUBLIC 
+target_include_directories(kuro_core PUBLIC 
     ${CMAKE_SOURCE_DIR}/include
 )
 
@@ -19,7 +20,7 @@ target_include_directories(kuro_net PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )
 target_link_libraries(kuro_net PRIVATE
-    kuro_logger
+    kuro_core
 )
 
 option(BUILD_EXAMPLES "Build examples" ON)
