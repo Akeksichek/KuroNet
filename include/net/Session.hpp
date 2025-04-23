@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "core/logger.hpp"
+#include <core/UniqueUtils.hpp>
 
 namespace kuro {
 
@@ -35,11 +36,16 @@ namespace kuro {
         private:
             std::unordered_map<std::string, Client> clients_;
             std::mutex clients_mutex_;
+
+            std::vector<std::string> active_tokens_;
+            std::mutex tokens_mtx_;
             
         public:
             void add_client(Client&& client);
 
             void remove_client(const std::string& id);
+
+            void create_token(TokenHandler::TokenType token);
         };
 
     /**

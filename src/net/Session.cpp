@@ -44,5 +44,11 @@ namespace kuro
         }
     }
 
+    void ClientSessionManager::create_token(TokenHandler::TokenType token)
+    {
+        std::lock_guard<std::mutex> lock(tokens_mtx_);
+        active_tokens_.push_back(TokenHandler::generate(token));
+    }
+
 
 } //namesapce kuro

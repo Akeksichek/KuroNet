@@ -32,7 +32,7 @@ namespace kuro
     }
 
     // enum class TokenType { PermanentToken, SessionToken, TemporaryToken };
-    std::string TokenHnadler::generate(const TokenHnadler::TokenType& token)
+    std::string TokenHandler::generate(const TokenHandler::TokenType& token)
     {
         std::string res_token;
         std::string type_token;
@@ -56,6 +56,8 @@ namespace kuro
         std::string signature = std::to_string(hash);
 
         res_token = type_token + "." + random_part + "." + signature;
+
+        Logger::log(Logger::Level::Info, "New token was created send this token your teammate: " + res_token);
 
         return res_token;
     }
