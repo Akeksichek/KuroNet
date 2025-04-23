@@ -5,6 +5,8 @@
 #include <random>
 #include <algorithm>
 
+#include <core/logger.hpp>
+
 namespace kuro
 {
     namespace kuro_generator {
@@ -27,5 +29,12 @@ namespace kuro
          */
         static std::string generate(int length = IDGenerator::default_length_);
 
+    };
+
+    class TokenHandler
+    {        
+    public:
+        enum class TokenType { PermanentToken, SessionToken, TemporaryToken };
+        static std::string generate(const TokenHandler::TokenType& token);
     };
 }

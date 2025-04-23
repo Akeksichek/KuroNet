@@ -1,29 +1,63 @@
 #include "core/UniqueUtils.hpp"
 
-std::string kuro::kuro_generator::random_generate_str(int length)
+namespace kuro
 {
-    const std::string chars =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
     
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<> dist(0, chars.size() - 1);
+    std::string kuro_generator::random_generate_str(int length)
+    {
+        const std::string chars =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+        
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_int_distribution<> dist(0, chars.size() - 1);
 
-    std::string result;
-    result.reserve(length);
-    for (int i = 0; i < length; ++i) {
-        result += chars[dist(generator)];
+        std::string result;
+        result.reserve(length);
+        for (int i = 0; i < length; ++i) {
+            result += chars[dist(generator)];
+        }
+
+        return result;
     }
 
-    return result;
-}
+    int IDGenerator::default_length_ = 16;
+            
+    std::string IDGenerator::generate(int length)
+    {
+        std::string id = kuro_generator::random_generate_str(length);
+        return id;
+    }
 
-int kuro::IDGenerator::default_length_ = 16;
-        
-std::string kuro::IDGenerator::generate(int length)
-{
-    std::string id = kuro::kuro_generator::random_generate_str(length);
-    return id;
+    // enum class TokenType { PermanentToken, SessionToken, TemporaryToken };
+    std::string TokenHnadler::generate(const TokenHnadler::TokenType& token)
+    {
+        std::string res_token;
+        std::string type_token;
+        switch (token)
+        {
+            case TokenType::PermanentToken :
+                type_token = "perm_";
+                    break;
+            case TokenType::SessionToken :
+                type_token = "sess_";
+                    break;
+            case TokenType::TemporaryToken :
+                type_token = "temp_";
+                    break;
+        default:
+            break;
+        }
+
+        std::string random_part = kuro_generator::random_generate_str(10);
+        size_t hash = std::hash<std::string>{}(random_part);
+        std::string signature = std::to_string(hash);
+
+        res_token = type_token + "." + random_part + "." + signature;
+
+        return res_token;
+    }
+
 }
