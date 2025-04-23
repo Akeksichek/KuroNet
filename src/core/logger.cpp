@@ -17,6 +17,7 @@ namespace kuro
 
     Logger::Level Logger::current_level_ = Logger::Level::Info;
     std::mutex Logger::log_mutex_;
+    std::atomic<bool> Logger::stop_flag_ = false;
 
     void Logger::set_level(Level level) {
         current_level_ = level;
@@ -25,6 +26,14 @@ namespace kuro
     void Logger::log(Level level, const std::string& message) {
         if (level < current_level_) return;
 
+        if(!log_when_stopped_.empty()) {
+            std::lock_guard<std::mutex> lock(log_mutex_);
+            std::for_each(log_when_stopped_.begin(), log_when_stopped_.end(), [](std::string log){
+                std::cout << log << std::endl;
+            });
+            log_when_stopped_.clear();
+        }
+
         const char* level_str = "";
         const char* color = "";
         switch (level) {
@@ -32,10 +41,29 @@ namespace kuro
             case Level::Info: level_str = "INFO"; color = COLOR_GREEN; break;
             case Level::Warning: level_str = "WARN"; color = COLOR_YELLOW; break;
             case Level::Error: level_str = "ERROR"; color = COLOR_RED; break;
+        }
+
+        std::string log_output = "[" + detail::current_time() + "][KuroNet][" 
+            + color + level_str + COLOR_RESET 
+            + "]: " + color + message + COLOR_RESET;
+
+        if(stop_flag_.load()) {
+            std::lock_guard<std::mutex> lock(log_mutex_);
+            log_when_stopped_.push_back(log_output);
+            return;
+        }
+
+        std::lock_guard<std::mutex> lock(log_mutex_);
+        std::cout << log_output << std::endl;
     }
 
-    std::lock_guard<std::mutex> lock(log_mutex_);
-    std::cout << "[" << detail::current_time() << "][KuroNet][" << color << level_str << COLOR_RESET << "]: " << color << message << COLOR_RESET << std::endl;
-}
+    void Logger::stop()
+    {
+        stop_flag_.store(true);
+    }
+    void Logger::_continue()
+    {
+        stop_flag_.store(false);
+    }
 
 } // namespace kuro

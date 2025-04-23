@@ -3,6 +3,9 @@
 #include <iostream>
 #include <mutex>
 #include <iomanip>
+#include <vector>
+#include <atomic>
+#include <algorithm>
 
 #define COLOR_RED       "\033[31m"
 #define COLOR_GREEN     "\033[32m"
@@ -47,10 +50,15 @@ namespace kuro {
 
         static void log(Level level, const std::string& message);
 
+        static void stop();
+        static void _continue();
+
     private:
         static Level current_level_;
         static std::mutex log_mutex_;
 
-};
+        static std::vector<std::string> log_when_stopped_;
+        static std::atomic<bool> stop_flag_;
+    };
 
 } // namespace kuro
