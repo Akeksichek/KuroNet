@@ -12,15 +12,6 @@ set(KURO_TESTS
 
 foreach(test_name ${KURO_TESTS})
     add_executable(${test_name} ${test_name}.cpp)
-    target_link_libraries(${test_name} PRIVATE kuro_net kuro_logger Catch2::Catch2WithMain)
+    target_link_libraries(${test_name} PRIVATE kuro_net kuro_core Catch2::Catch2WithMain)
     add_test(NAME test_name COMMAND test_name)
 endforeach()
-
-# add_executable(logger_test logger_test.cpp)
-# target_link_libraries(logger_test PRIVATE 
-#     kuro_logger
-#     Catch2::Catch2WithMain
-# )
-
-# enable_testing()
-# add_test(NAME logger_test COMMAND logger_test)

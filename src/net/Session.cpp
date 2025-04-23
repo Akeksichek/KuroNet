@@ -12,8 +12,8 @@ namespace kuro
         }
 
         try {
-            clients_.emplace(client.id, std::move(client));
             Logger::log(Logger::Level::Info, "Client " + client.id + " added successfully");
+            clients_.emplace(client.id, std::move(client));
         } catch (const std::exception& e) {
             Logger::log(Logger::Level::Error, "Failed to add client: " + std::string(e.what()));
         }

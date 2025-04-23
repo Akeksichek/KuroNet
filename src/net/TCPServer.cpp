@@ -39,8 +39,6 @@ namespace kuro
                 std::string message;
                 std::getline(is, message);
 
-                Logger::log(Logger::Level::Info, message);
-
                 if(message.rfind("LOGIN:", 0) != 0) {
                     Logger::log(Logger::Level::Warning, "Пользователь " 
                                 + socket->remote_endpoint().address().to_string() 
@@ -54,12 +52,10 @@ namespace kuro
                 
                 Client client{
                     socket,
-                    "temp_test_id",
+                    IDGenerator::generate(),
                     login,
                 };
                 
-                Session::get_instance().manager.add_client(std::move(client));
-                Logger::log(Logger::Level::Info, "User logged in: " + login);
                 session_ptr->manager.add_client(std::move(client));
                 
                 boost::asio::write(*socket, boost::asio::buffer("AUTH_OK\n"));

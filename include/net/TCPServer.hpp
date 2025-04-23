@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "core/logger.hpp"
+#include <core/UniqueUtils.hpp>
 #include <net/Session.hpp>
 
 namespace kuro

@@ -38,16 +38,8 @@ namespace kuro {
             
         public:
             void add_client(Client&& client);
-            // void add_client(Client&& client) {
-            //     std::lock_guard<std::mutex> lock(clients_mutex_);
-            //     clients_.emplace(client.id, std::move(client));
-            // }
 
             void remove_client(const std::string& id);
-            // void remove_client(const std::string& id) {
-            //     std::lock_guard<std::mutex> lock(clients_mutex_);
-            //     clients_.erase(id);
-            // }
         };
 
     /**

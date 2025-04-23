@@ -5,5 +5,5 @@ set(KURO_EXAMPLES
 
 foreach(example_name ${KURO_EXAMPLES})
     add_executable(${example_name} ${example_name}.cpp)
-    target_link_libraries(${example_name} PRIVATE kuro_net kuro_logger)
+    target_link_libraries(${example_name} PRIVATE kuro_net kuro_core)
 endforeach()
