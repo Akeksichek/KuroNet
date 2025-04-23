@@ -20,3 +20,7 @@ docs/latex/
 
 *.log
 *.exe
+
+#some files
+*.sh
+config.doxy.bak
