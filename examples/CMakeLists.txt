@@ -1,6 +1,7 @@
 set(KURO_EXAMPLES
     tcp_server_example
     log_example
+    commands_example
 )
 
 foreach(example_name ${KURO_EXAMPLES})
