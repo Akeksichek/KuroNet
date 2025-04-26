@@ -2,7 +2,7 @@
 ## Лёгкий асинхронный чат на C++/Boost.Asio
 
 ## [WIP]
-### В планах разработка системы контролирующей доступ к конкретным адресам в локальной(а может и не только) сети, посредством  токенов которые выдаются хостом, со встроенным чатом и полным контролем подключений и индексацией файлов.
+### В планах разработка системы контролирующей доступ к конкретным адресам в локальной сети, посредством  токенов которые выдаются хостом, со встроенным чатом и полным контролем подключений и индексацией файлов.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Akeksichek/KuroNet/build.yml?label=CI)](https://github.com/Akeksichek/KuroNet)
