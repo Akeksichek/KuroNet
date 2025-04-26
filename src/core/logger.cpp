@@ -18,6 +18,7 @@ namespace kuro
     Logger::Level Logger::current_level_ = Logger::Level::Info;
     std::mutex Logger::log_mutex_;
     std::atomic<bool> Logger::stop_flag_ = false;
+    std::vector<std::string> Logger::log_when_stopped_;
 
     void Logger::set_level(Level level) {
         current_level_ = level;
@@ -26,14 +27,6 @@ namespace kuro
     void Logger::log(Level level, const std::string& message) {
         if (level < current_level_) return;
 
-        if(!log_when_stopped_.empty()) {
-            std::lock_guard<std::mutex> lock(log_mutex_);
-            std::for_each(log_when_stopped_.begin(), log_when_stopped_.end(), [](std::string log){
-                std::cout << log << std::endl;
-            });
-            log_when_stopped_.clear();
-        }
-
         const char* level_str = "";
         const char* color = "";
         switch (level) {
@@ -41,6 +34,7 @@ namespace kuro
             case Level::Info: level_str = "INFO"; color = COLOR_GREEN; break;
             case Level::Warning: level_str = "WARN"; color = COLOR_YELLOW; break;
             case Level::Error: level_str = "ERROR"; color = COLOR_RED; break;
+            case Level::Command: level_str = "COMMAND"; color = COLOR_BLUE; break;
         }
 
         std::string log_output = "[" + detail::current_time() + "][KuroNet][" 
@@ -49,12 +43,20 @@ namespace kuro
 
         if(stop_flag_.load()) {
             std::lock_guard<std::mutex> lock(log_mutex_);
+            if (log_output.find("COMMAND") == std::string::npos) {
+                log_output += "\t --history";
+            }
             log_when_stopped_.push_back(log_output);
-            return;
+        } else {
+            std::lock_guard<std::mutex> lock(log_mutex_);
+            if(!log_when_stopped_.empty()) {
+                std::for_each(log_when_stopped_.begin(), log_when_stopped_.end(), [](std::string log){
+                    std::cout << log << std::endl;
+                });
+                log_when_stopped_.clear();
+            }
+            std::cout << log_output << std::endl;
         }
-
-        std::lock_guard<std::mutex> lock(log_mutex_);
-        std::cout << log_output << std::endl;
     }
 
     void Logger::stop()

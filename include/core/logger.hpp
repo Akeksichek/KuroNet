@@ -27,7 +27,7 @@ namespace kuro {
      */
     class Logger {
     public:
-        enum class Level { Debug, Info, Warning, Error };
+        enum class Level { Debug, Info, Warning, Error, Command };
         
         /**
          * @brief Устанавливает глобальный уровень логирования
