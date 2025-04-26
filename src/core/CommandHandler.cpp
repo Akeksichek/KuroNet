@@ -2,6 +2,20 @@
 
 namespace kuro
 {
+    void CommandHandler::get_help() {
+        std::string help = 
+            "Type \"help\" for see that message\n" + 
+            [this](){
+                std::scoped_lock lock(executors_mtx_);
+                std::string res = "Supported operations\n";
+                for(const auto& pair : executors) {
+                    res += pair.first + '\n';
+                }
+                return res;
+            }();
+        Logger::log(Logger::Level::Command, help);
+    }
+
     void CommandHandler::set_nonblocking(bool enable) {
         static struct termios oldt, newt;
         tcgetattr(STDIN_FILENO, &oldt);
@@ -30,33 +44,15 @@ namespace kuro
         }
         command_parts.push_back(part);
     }
-    
-    bool CommandHandler::action_valid()
-    {
-        for(auto elem : supported_actions) {
-            if(elem == command_parts[0]) {
-                return true;
-            }
-        }
-        Logger::log(Logger::Level::Error, "Неизвестная команда: " + command_parts[0]);
-        return false;
-    }
+
     bool CommandHandler::executor_valid()
     {
-        if(command_parts[1].empty() || command_parts[1] == " ") {
-            for(auto action : supported_actions) {
-                if(action == command_parts[0]) {
-                    Logger::log(Logger::Level::Error, "Операнд для " + command_parts[0] + ", не может быть пустым");
-                    return false;
-                }
-            }
-        }
-        auto executor = executors.find(command_parts[1]);
+        auto executor = executors.find(command_parts[0]);
         if(executor != executors.end()) {
-            executor->second.get()->execute();
+            executor->second.get()->execute(command_parts);
             return true;
         }
-        Logger::log(Logger::Level::Error, "Неизвестный операнд: " + command_parts[1]);
+        Logger::log(Logger::Level::Error, "Неизвестный операнд: " + command_parts[0]);
         return false;
     }
     
@@ -71,9 +67,16 @@ namespace kuro
             std::cout << ">: ";
             cmd_hndl_ptr->set_nonblocking(false);
             std::getline(std::cin, command, '\n');
+
+            if(command == "help") {
+                cmd_hndl_ptr->get_help();
+                Logger::_continue();
+                return;
+            }
+
             cmd_hndl_ptr->command_partition(std::move(command));
     
-            if(!cmd_hndl_ptr->action_valid() || !cmd_hndl_ptr->executor_valid())
+            if(!cmd_hndl_ptr->executor_valid())
             {
                 Logger::_continue();
                 return;

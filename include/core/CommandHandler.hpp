@@ -34,11 +34,10 @@ namespace kuro
         
 
     private:
+        std::mutex executors_mtx_;    
+
         std::vector<std::string> command_parts;
-        std::vector<std::string> supported_actions {
-            "start",
-            "create"
-        };
+
         std::unordered_map<std::string, std::unique_ptr<commands::BaseCommand>> executors;
         void exec_init() {
             executors.emplace(
@@ -48,10 +47,11 @@ namespace kuro
         }    
 
         void set_nonblocking(bool);
-        bool action_valid();
         bool executor_valid();
 
         void command_partition(std::string&&);
+
+        void get_help();
 
         static CommandHandler& get_imstance() {
             static CommandHandler instance;

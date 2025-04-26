@@ -7,7 +7,7 @@ namespace kuro
         class BaseCommand
         {
         public:
-            virtual void execute() = 0;
+            virtual void execute(std::vector<std::string>&) = 0;
         };
     }
 }
