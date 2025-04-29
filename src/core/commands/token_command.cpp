@@ -19,12 +19,8 @@ namespace kuro
 
         void TokenCommand::create_token() {
             TokenHandler::TokenType level;
-            if(command.size() <= 2) {
-                Logger::log(Logger::Level::Command, R"(Supported token types:
-                    -perm: permanent
-                    -sess: session
-                    -temp: temporary
-                    )");
+            if(command.size() < 3) {
+                Logger::log(Logger::Level::Command, "Supported token types:\n-perm: permanent\n-sess: session\n-temp: temporary");
                 return;
             } 
             else {
@@ -37,6 +33,11 @@ namespace kuro
                     level = TokenHandler::TokenType::SessionToken;
                 }
                 else if(token_type == "-temp") {
+                    if(command.size() < 5) {
+                        Logger::log(Logger::Level::Error, "Command Error: token create -temp -<time_range> -<time>");
+                        return;
+                    }
+                    TokenHandler::set_time_token(command[3], command[4]); // token create -temp -day 1
                     level = TokenHandler::TokenType::TemporaryToken;
                 }
                 else {
@@ -50,7 +51,7 @@ namespace kuro
         }
 
         void TokenCommand::execute(std::vector<std::string>& cmd) {
-            if(cmd.size() < 2) {
+            if(cmd.size() <= 2) {
                 Logger::log(Logger::Level::Error, "Type \"token help\"");
                 return;
             }

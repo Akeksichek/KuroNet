@@ -32,9 +32,12 @@ namespace kuro
     };
 
     class TokenHandler
-    {        
+    {
+    private:
+        static int token_time;
     public:
         enum class TokenType { PermanentToken, SessionToken, TemporaryToken };
+        static void set_time_token(const std::string& time, const std::string& unit);
         static std::string generate(const TokenHandler::TokenType& token);
     };
 }
