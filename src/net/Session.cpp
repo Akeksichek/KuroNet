@@ -6,14 +6,14 @@ namespace kuro
     {
         std::lock_guard<std::mutex> lock(clients_mutex_);
 
-        if (clients_.find(client.id) != clients_.end()) {
+        if (wait_clients_.find(client.id) != wait_clients_.end()) {
             Logger::log(Logger::Level::Warning, "Client with id " + client.id + " already exists");
             return;
         }
 
         try {
-            Logger::log(Logger::Level::Info, "Client " + client.id + " added successfully");
-            clients_.emplace(client.id, std::move(client));
+            Logger::log(Logger::Level::Info, "New client " + client.id + " trying connect");
+            wait_clients_.emplace(client.id, std::move(client));
         } catch (const std::exception& e) {
             Logger::log(Logger::Level::Error, "Failed to add client: " + std::string(e.what()));
         }
@@ -50,5 +50,28 @@ namespace kuro
         active_tokens_.push_back(TokenHandler::generate(token));
     }
 
+    void ClientSessionManager::approve_client(const std::string& user_id, const std::string& token)
+    {
+        if(bool check_token = [this, &token](){
+            for(auto token_ : active_tokens_) {
+                if(token == token_) return true;
+            }
+            Logger::log(Logger::Level::Error, "This token: " + token + " - not found");
+            return false;
+        }(); !check_token) return;
+
+        auto wait_client_iter = wait_clients_.find(user_id);
+        if(wait_client_iter == wait_clients_.end()) {
+            Logger::log(Logger::Level::Error, "User " + user_id + " not found");
+            return;
+        }
+        wait_client_iter->second.token = token;
+
+        auto node = wait_clients_.extract(wait_client_iter);
+
+        boost::asio::write(*wait_client_iter->second.socket, boost::asio::buffer("You are approved\n"));
+
+        clients_.insert(std::move(node));
+    }
 
 } //namesapce kuro

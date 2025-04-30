@@ -58,7 +58,7 @@ namespace kuro
                 
                 session_ptr->manager.add_client(std::move(client));
                 
-                boost::asio::write(*socket, boost::asio::buffer("AUTH_OK\n"));
+                boost::asio::write(*socket, boost::asio::buffer("Wait for host approval you\n"));
             }
         );
     }

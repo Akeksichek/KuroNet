@@ -2,6 +2,7 @@
 
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/write.hpp>
 #include <mutex>
 #include <vector>
 #include <thread>
@@ -19,6 +20,7 @@ namespace kuro {
         std::shared_ptr<boost::asio::ip::tcp::socket> socket;
         std::string id;
         std::string login;
+        std::string token = "";
     };
 
     /**
@@ -35,12 +37,14 @@ namespace kuro {
     class ClientSessionManager {
         private:
             std::unordered_map<std::string, Client> clients_;
+            std::unordered_map<std::string, Client> wait_clients_;
             std::mutex clients_mutex_;
 
             std::vector<std::string> active_tokens_;
             std::mutex tokens_mtx_;
             
         public:
+            void approve_client(const std::string& user_id, const std::string& token);
             void add_client(Client&& client);
 
             void remove_client(const std::string& id);
