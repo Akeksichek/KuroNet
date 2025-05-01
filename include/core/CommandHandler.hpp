@@ -44,6 +44,10 @@ namespace kuro
                 std::string("token"),  // Явно создаём string
                 std::unique_ptr<commands::BaseCommand>(new commands::TokenCommand())  // Явное приведение
             );
+            executors.emplace(
+                std::string("client"),
+                std::unique_ptr<commands::BaseCommand>(new commands::ClientsCommand())
+            );
         }    
 
         void set_nonblocking(bool);

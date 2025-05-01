@@ -44,12 +44,12 @@ namespace kuro {
             std::mutex tokens_mtx_;
             
         public:
-            void approve_client(const std::string& user_id, const std::string& token);
+            bool approve_client(const std::string& user_id, const std::string& token);
             void add_client(Client&& client);
 
             void remove_client(const std::string& id);
 
-            void create_token(TokenHandler::TokenType token);
+            void create_token(std::string& token);
         };
 
     /**

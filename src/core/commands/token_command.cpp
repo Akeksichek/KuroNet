@@ -47,6 +47,7 @@ namespace kuro
             }
             
             std::string token = TokenHandler::generate(level);
+            Session::get_instance().manager.create_token(token);
             Logger::log(Logger::Level::Command, "New token created: " + token);
         }
 

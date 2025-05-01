@@ -26,6 +26,7 @@ target_include_directories(kuro_net PUBLIC
 # Commands library
 add_library(kuro_commands STATIC
     src/core/commands/token_command.cpp
+    src/core/commands/clients_command.cpp
 )
 target_include_directories(kuro_commands PUBLIC
     ${CMAKE_SOURCE_DIR}/include/commands

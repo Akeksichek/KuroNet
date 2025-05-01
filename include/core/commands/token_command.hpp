@@ -1,5 +1,6 @@
 #pragma once
 
+#include <net/Session.hpp>
 #include <core/logger.hpp>
 #include <core/UniqueUtils.hpp>
 #include <core/commands/base_command.hpp>

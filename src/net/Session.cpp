@@ -44,26 +44,28 @@ namespace kuro
         }
     }
 
-    void ClientSessionManager::create_token(TokenHandler::TokenType token)
+    void ClientSessionManager::create_token(std::string& token)
     {
         std::lock_guard<std::mutex> lock(tokens_mtx_);
-        active_tokens_.push_back(TokenHandler::generate(token));
+        active_tokens_.push_back(token);
     }
 
-    void ClientSessionManager::approve_client(const std::string& user_id, const std::string& token)
+    bool ClientSessionManager::approve_client(const std::string& user_id, const std::string& token)
     {
         if(bool check_token = [this, &token](){
+            std::lock_guard<std::mutex> lock(tokens_mtx_);
             for(auto token_ : active_tokens_) {
                 if(token == token_) return true;
             }
             Logger::log(Logger::Level::Error, "This token: " + token + " - not found");
             return false;
-        }(); !check_token) return;
+        }(); !check_token) return false;
 
+        std::lock_guard<std::mutex> lock(clients_mutex_);
         auto wait_client_iter = wait_clients_.find(user_id);
         if(wait_client_iter == wait_clients_.end()) {
             Logger::log(Logger::Level::Error, "User " + user_id + " not found");
-            return;
+            return false;
         }
         wait_client_iter->second.token = token;
 
@@ -72,6 +74,8 @@ namespace kuro
         boost::asio::write(*wait_client_iter->second.socket, boost::asio::buffer("You are approved\n"));
 
         clients_.insert(std::move(node));
+
+        return true;
     }
 
 } //namesapce kuro
