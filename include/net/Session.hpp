@@ -47,6 +47,12 @@ namespace kuro {
             bool approve_client(const std::string& user_id, const std::string& token);
             void add_client(Client&& client);
 
+            template <typename F>
+            void access_clients(F&& callback) {
+                std::lock_guard<std::mutex> lock(clients_mutex_);
+                callback(clients_);
+            }
+
             void remove_client(const std::string& id);
 
             void create_token(std::string& token);
