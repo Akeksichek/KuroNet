@@ -8,12 +8,10 @@ std::chrono::steady_clock::time_point start_prgrm = std::chrono::steady_clock::n
 
 int main()
 {
-    kuro::Logger::set_level(kuro::Logger::Level::Debug); // Выводим все логи
+    kuro::Logger::set_level(kuro::Logger::Level::Error); // Выводим все логи
     
     std::thread cmd_thr([](){
-        while(true) {
-            kuro::CommandHandler::run(); // запускаем ожидание ввода команды(начнется после нажатия "!")
-        }
+        kuro::CommandHandler::run(); // запускаем ожидание ввода команды(начнется после нажатия "!")
     });
 
     kuro::TCPServer server(12345);
@@ -23,18 +21,9 @@ int main()
     });
 
     server.start(); // запуск сервера
-    
-    while(true)
-    {
-        std::chrono::steady_clock::time_point while_thr = std::chrono::steady_clock::now();
-        if(while_thr - start_prgrm >= std::chrono::milliseconds(1500)) { // ожидаем 500 миллисекунд не останавливая поток
-            kuro::Logger::log(kuro::Logger::Level::Info, "Main thread...");
-            start_prgrm = std::chrono::steady_clock::now(); // обновляем время чтобы вызвать логгер еще раз
-        }
 
-    }
-
-    cmd_thr.detach();
+    cmd_thr.join();
+    io_thr.join();
 
     return 0;
 }
