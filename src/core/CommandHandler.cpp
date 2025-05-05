@@ -60,29 +60,34 @@ namespace kuro
     {
         auto cmd_hndl_ptr = &CommandHandler::get_imstance();
         
-        cmd_hndl_ptr->set_nonblocking(true);
-        if(char c; read(STDIN_FILENO, &c, 1) > 0 && c == '!') {
-            Logger::stop();
-            std::string command;
-            std::cout << ">: ";
-            cmd_hndl_ptr->set_nonblocking(false);
-            std::getline(std::cin, command, '\n');
-
-            if(command == "help") {
-                cmd_hndl_ptr->get_help();
-                Logger::_continue();
-                return;
-            }
-
-            cmd_hndl_ptr->command_partition(std::move(command));
-    
-            if(!cmd_hndl_ptr->executor_valid())
-            {
-                Logger::_continue();
-                return;
-            }
+        
+        while(true)
+        {
+            cmd_hndl_ptr->set_nonblocking(true);
             Logger::_continue();
+            if(char c; read(STDIN_FILENO, &c, 1) > 0 && c == '!') {
+                Logger::stop();
+                std::string command;
+                std::cout << ">: ";
+                cmd_hndl_ptr->set_nonblocking(false);
+                std::getline(std::cin, command, '\n');
+
+                if(command == "exit") {
+                    continue;
+                }
+                if(command == "help") {
+                    cmd_hndl_ptr->get_help();
+                    continue;
+                }
+
+                cmd_hndl_ptr->command_partition(std::move(command));
+        
+                if(!cmd_hndl_ptr->executor_valid())
+                {
+                    continue;
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // перерыв для CPU + время обработки подключений
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // перерыв для CPU + время обработки подключений
     }
 } // namespace kuro

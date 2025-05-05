@@ -49,12 +49,6 @@ namespace kuro
             log_when_stopped_.push_back(log_output);
         } else {
             std::lock_guard<std::mutex> lock(log_mutex_);
-            if(!log_when_stopped_.empty()) {
-                std::for_each(log_when_stopped_.begin(), log_when_stopped_.end(), [](std::string log){
-                    std::cout << log << std::endl;
-                });
-                log_when_stopped_.clear();
-            }
             std::cout << log_output << std::endl;
         }
     }
@@ -66,6 +60,12 @@ namespace kuro
     void Logger::_continue()
     {
         stop_flag_.store(false);
+        if(!log_when_stopped_.empty()) {
+            std::for_each(log_when_stopped_.begin(), log_when_stopped_.end(), [](std::string log){
+                std::cout << log << std::endl;
+            });
+            log_when_stopped_.clear();
+        }
     }
 
 } // namespace kuro
