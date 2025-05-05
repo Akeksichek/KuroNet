@@ -4,7 +4,7 @@ namespace kuro
 {
     void CommandHandler::get_help() {
         std::string help = 
-            "Type \"help\" for see that message\n" + 
+            "\nType \"help\" for see that message\nexit for close KuroNet\n" + 
             [this](){
                 std::scoped_lock lock(executors_mtx_);
                 std::string res = "Supported operations\n";
@@ -73,7 +73,7 @@ namespace kuro
                 std::getline(std::cin, command, '\n');
 
                 if(command == "exit") {
-                    continue;
+                    exit(0);
                 }
                 if(command == "help") {
                     cmd_hndl_ptr->get_help();
