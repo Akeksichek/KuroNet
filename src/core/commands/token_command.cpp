@@ -52,7 +52,7 @@ namespace kuro
         }
 
         void TokenCommand::execute(std::vector<std::string>& cmd) {
-            if(cmd.size() <= 2) {
+            if(cmd.size() < 2) {
                 Logger::log(Logger::Level::Error, "Type \"token help\"");
                 return;
             }

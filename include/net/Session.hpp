@@ -53,6 +53,12 @@ namespace kuro {
                 callback(clients_);
             }
 
+            template <typename F>
+            void access_wait_clients(F&& callback) {
+                std::lock_guard<std::mutex> lock(clients_mutex_);
+                callback(wait_clients_);
+            }
+
             void remove_client(const std::string& id);
 
             void create_token(std::string& token);

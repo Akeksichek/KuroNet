@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <unordered_map>
 #include <memory>
@@ -48,7 +49,7 @@ namespace kuro
                 std::string("client"),
                 std::unique_ptr<commands::BaseCommand>(new commands::ClientsCommand())
             );
-        }    
+        }
 
         void set_nonblocking(bool);
         bool executor_valid();

@@ -18,22 +18,24 @@ namespace kuro
             std::vector<std::string> command;
             void get_help();
             void approve();
+            void get_wait_clients();
+            void get_clients();
 
             // в разработке
 
             // void reject();
-            // void get_wait_clients();
             // void get_approved_clients();
             std::unordered_map<std::string, std::function<void()>> operations;
 
             void init_operations() {
                 operations.emplace("help", [this](){ get_help(); });
                 operations.emplace("approve", [this](){ approve(); });
+                operations.emplace("waits", [this](){ get_wait_clients(); });
+                operations.emplace("list", [this](){ get_clients(); });
 
                 // в разработке
 
                 // operations.emplace("reject", [this](){ reject(); });
-                // operations.emplace("wait_clients", [this](){ get_wait_clients(); });
                 // operations.emplace("approved_clients", [this](){ get_approved_clients(); });
             }
 

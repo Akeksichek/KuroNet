@@ -30,20 +30,16 @@ namespace kuro
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     }
     
-    void CommandHandler::command_partition(std::string&& command)
-    {
-        if(!command_parts.empty()) command_parts.clear();
+    void CommandHandler::command_partition(std::string&& command) {
+        command_parts.clear();
+        
+        std::istringstream iss(command);
         std::string part;
-        for(auto elem : command) {
-            if(elem == ' ') {
-                command_parts.push_back(part);
-                part.clear();
-            } else {
-                part += elem;
-            }
+        
+        while (iss >> part) {
+            command_parts.push_back(part);
         }
-        command_parts.push_back(part);
-    }
+    }    
 
     bool CommandHandler::executor_valid()
     {
