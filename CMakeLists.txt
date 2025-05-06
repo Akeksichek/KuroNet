@@ -18,6 +18,7 @@ target_include_directories(kuro_core PUBLIC
 add_library(kuro_net STATIC
     src/net/TCPServer.cpp
     src/net/Session.cpp
+    src/net/Chat/Chat.cpp
 )
 target_include_directories(kuro_net PUBLIC
     ${CMAKE_SOURCE_DIR}/include

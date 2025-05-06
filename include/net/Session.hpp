@@ -6,6 +6,7 @@
 #include <mutex>
 #include <vector>
 #include <thread>
+#include <chrono>
 
 #include "core/logger.hpp"
 #include <core/UniqueUtils.hpp>
@@ -35,34 +36,34 @@ namespace kuro {
      *       Логирует все события.
      */
     class ClientSessionManager {
-        private:
-            std::unordered_map<std::string, Client> clients_;
-            std::unordered_map<std::string, Client> wait_clients_;
-            std::mutex clients_mutex_;
+    private:
+        std::unordered_map<std::string, Client> clients_;
+        std::unordered_map<std::string, Client> wait_clients_;
+        std::mutex clients_mutex_;
 
-            std::vector<std::string> active_tokens_;
-            std::mutex tokens_mtx_;
-            
-        public:
-            bool approve_client(const std::string& user_id, const std::string& token);
-            void add_client(Client&& client);
+        std::vector<std::string> active_tokens_;
+        std::mutex tokens_mtx_;
+        
+    public:
+        bool approve_client(const std::string& user_id, const std::string& token);
+        void add_client(Client&& client);
 
-            template <typename F>
-            void access_clients(F&& callback) {
-                std::lock_guard<std::mutex> lock(clients_mutex_);
-                callback(clients_);
-            }
+        template <typename F>
+        void access_clients(F&& callback) {
+            std::lock_guard<std::mutex> lock(clients_mutex_);
+            callback(clients_);
+        }
 
-            template <typename F>
-            void access_wait_clients(F&& callback) {
-                std::lock_guard<std::mutex> lock(clients_mutex_);
-                callback(wait_clients_);
-            }
+        template <typename F>
+        void access_wait_clients(F&& callback) {
+            std::lock_guard<std::mutex> lock(clients_mutex_);
+            callback(wait_clients_);
+        }
 
-            void remove_client(const std::string& id);
+        void remove_client(const std::string& id);
 
-            void create_token(std::string& token);
-        };
+        void create_token(std::string& token);
+    };
 
     /**
      * @brief Главный управляющий класс для работы с асинхронными операциями
