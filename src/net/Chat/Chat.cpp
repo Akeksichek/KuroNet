@@ -50,15 +50,18 @@ namespace kuro {
 
         void Chat::work()
         {
-            auto& manager = Session::get_instance().manager;
+            if(!started.load()) return;
 
-            while(started.load()) {
-                manager.access_clients([this](const std::unordered_map<std::string, Client>& clients){
-                    for(const auto& [client_id, client] : clients) {
-                        do_read(client_id, client);
-                    }
-                });   
-            }
+            auto& manager = Session::get_instance().manager;
+            manager.access_clients([this](const std::unordered_map<std::string, Client>& clients){
+                for(const auto& [client_id, client] : clients) {
+                    do_read(client_id, client);
+                }
+
+                auto timer = std::make_shared<boost::asio::steady_timer>(Session::get_instance().ioc_);
+                timer->expires_after(std::chrono::milliseconds(100));
+                timer->async_wait([this](auto&&...){ work(); });
+            });
         }
 
         void Chat::stop()
