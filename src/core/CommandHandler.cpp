@@ -71,8 +71,14 @@ namespace kuro
                 if(command == "exit") {
                     exit(0);
                 }
+
                 if(command == "help") {
                     cmd_hndl_ptr->get_help();
+                    continue;
+                }
+                
+                if(command.empty()) {
+                    Logger::log(Logger::Level::Error, "Command empty, type help for get help");
                     continue;
                 }
 
