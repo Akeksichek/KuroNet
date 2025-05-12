@@ -15,6 +15,7 @@ namespace kuro {
                 [this, client_ptr, client_id, buffer](const boost::system::error_code& ec, size_t /*bytes*/){
                     if(ec) {
                         Logger::log(Logger::Level::Error, "Client: " + client_ptr->login + " - read error: " + ec.message());
+                        Session::get_instance().manager.remove_client(client_id);
                         return;
                     }
                     std::istream is(buffer.get());
@@ -41,6 +42,7 @@ namespace kuro {
                     boost::asio::async_write(*client_ptr->socket, *write_buffer, [client_ptr, write_buffer](const boost::system::error_code& ec, size_t){
                         if(ec) {
                             Logger::log(Logger::Level::Error, "Client " + client_ptr->login + " - send error" + ec.message());
+                            Session::get_instance().manager.remove_client(client_ptr->login);
                             return;
                         }
                     });

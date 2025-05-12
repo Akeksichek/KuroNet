@@ -52,6 +52,7 @@ namespace kuro
             std::vector<std::string> wait_clients_list;
             manager.access_wait_clients([&wait_clients_list](const std::unordered_map<std::string, Client>& clients) {
                 for (const auto& [id, client] : clients) {
+                    if(!client.socket->is_open()) Logger::log(Logger::Level::Warning, id + ", leave");
                     auto user = id + " | " + client.login;
                     wait_clients_list.push_back(user);
                 }
