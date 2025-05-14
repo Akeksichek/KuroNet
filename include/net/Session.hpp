@@ -22,6 +22,12 @@ namespace kuro {
         std::string id;
         std::string login;
         std::string token = "";
+        
+        // Policy handling
+        size_t max_message_size = 4096;
+        bool allow_raw_tcp = false;
+        std::string auto_approve_key;
+        std::string agent_type;
     };
 
     /**
@@ -69,6 +75,16 @@ namespace kuro {
     }
 
     public:
+        /**
+         * @brief Автоматически принимает пользователя
+         * 
+         * Занимается автоматическим допуском клиента и выдает сессионный
+         * токен(сессионный токен активен, пока пользователь не отключится)
+         * 
+         * @param bool key - ключ
+         * @param Client&& client - обьект Client поддреживающий move-семантику, для передачи контроля клиента сессии
+         */
+        void auto_approve_client(Client&& client);
         bool approve_client(const std::string& user_id, const std::string& token);
         void add_client(Client&& client);
 

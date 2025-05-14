@@ -78,4 +78,11 @@ namespace kuro
         return true;
     }
 
+    void ClientSessionManager::auto_approve_client(Client&& client)
+    {
+        boost::asio::write(*client.socket, boost::asio::buffer("You are auto approved"));
+        std::lock_guard<std::mutex> lock(clients_mutex_);
+        clients_.emplace(client.id, std::move(client));
+    }
+
 } //namesapce kuro
