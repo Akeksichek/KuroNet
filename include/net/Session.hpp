@@ -10,26 +10,10 @@
 
 #include "core/logger.hpp"
 #include <core/UniqueUtils.hpp>
+#include <net/core/ClientPolicyRegistry.hpp>
+#include <net/Client.hpp>
 
 namespace kuro {
-
-    /**
-     * @brief Структура данных клиента
-     */
-    struct Client
-    {
-        std::shared_ptr<boost::asio::ip::tcp::socket> socket;
-        std::string id;
-        std::string login;
-        std::string token = "";
-        
-        // Policy handling
-        size_t max_message_size = 4096;
-        bool allow_raw_tcp = false;
-        std::string auto_approve_key;
-        std::string agent_type;
-    };
-
     /**
      * @class ClientSessionManager
      * @brief Менеджер клиентских сессий.
@@ -75,6 +59,8 @@ namespace kuro {
     }
 
     public:
+        dispatcher::ClientPolicyRegistry registry;
+
         /**
          * @brief Автоматически принимает пользователя
          * 

@@ -80,8 +80,8 @@ namespace kuro
 
     void ClientSessionManager::auto_approve_client(Client&& client)
     {
-        boost::asio::write(*client.socket, boost::asio::buffer("You are auto approved"));
         std::lock_guard<std::mutex> lock(clients_mutex_);
+        boost::asio::write(*client.socket, boost::asio::buffer("You are auto approved"));
         clients_.emplace(client.id, std::move(client));
     }
 

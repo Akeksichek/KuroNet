@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(MyProject VERSION 0.7.0)
+project(KuroNet VERSION 0.7.0)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Boost REQUIRED)
@@ -19,6 +19,7 @@ add_library(kuro_net STATIC
     src/net/TCPServer.cpp
     src/net/Session.cpp
     src/net/Chat/Chat.cpp
+    src/net/core/ClientPolicyRegistry.cpp
 )
 target_include_directories(kuro_net PUBLIC
     ${CMAKE_SOURCE_DIR}/include
