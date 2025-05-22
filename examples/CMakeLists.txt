@@ -3,6 +3,7 @@ set(KURO_EXAMPLES
     log_example
     commands_example
     chat_example
+    config_file_example
 )
 
 foreach(example_name ${KURO_EXAMPLES})

@@ -24,3 +24,4 @@ docs/latex/
 #some files
 *.sh
 config.doxy.bak
+config.json

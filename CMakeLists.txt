@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(KuroNet VERSION 0.7.0)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
+add_definitions(-DCONFIG_FILE_PATH="${CMAKE_SOURCE_DIR}/config.json")
+add_definitions(-DDEFAULT_CONFIG_FILE_PATH="${CMAKE_SOURCE_DIR}/include/core/System/config.default.json")
+
+# Library find
+find_package(OpenSSL REQUIRED)
+find_package(jsoncpp REQUIRED)
 find_package(Boost REQUIRED)
 
 # Core library
@@ -34,9 +40,12 @@ target_include_directories(kuro_commands PUBLIC
     ${CMAKE_SOURCE_DIR}/include/commands
 )
 
-
+# Libraries including
 target_link_libraries(kuro_commands PRIVATE kuro_core)
 target_link_libraries(kuro_net PRIVATE kuro_core kuro_commands)
+
+target_link_libraries(kuro_core PRIVATE OpenSSL::Crypto)
+target_link_libraries(kuro_core PRIVATE jsoncpp)
 
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_TESTS "Build tests" ON)

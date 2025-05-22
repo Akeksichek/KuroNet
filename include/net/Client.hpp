@@ -18,8 +18,6 @@ namespace kuro {
         
         // Policy handling
         std::string agent_type = "";
-        size_t max_message_size = 4096;
-        bool allow_raw_tcp = true;
     };
 
 } // namespace kuro

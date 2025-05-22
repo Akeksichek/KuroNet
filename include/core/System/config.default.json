@@ -1,0 +1,16 @@
+{
+    "server": {
+        "port": 12345,
+        "auto_approve_keyword": "AUTO_APPROVE_ME",
+        "max_connections": 100
+    },
+    "security": {
+        "secret_key": "your_32_byte_secure_key_here_123",
+        "signature_ttl_seconds": 300,
+        "allow_raw_tcp": true
+    },
+    "logger": {
+        "level": "Debug",
+        "file": "kuronet.log"
+    }
+}

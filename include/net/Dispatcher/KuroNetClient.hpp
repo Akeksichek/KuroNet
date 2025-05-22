@@ -63,9 +63,6 @@ namespace kuro {
                     
                     client.agent_type = get_agent_type();
                     
-                    client.max_message_size = get_max_message_size();
-                    client.allow_raw_tcp = get_allow_raw_tcp();
-                    
                     Logger::log(Logger::Level::Debug, 
                         "Parsed client: " + client.login + 
                         ", type: " + client.agent_type);
@@ -73,7 +70,7 @@ namespace kuro {
                 } catch (const std::exception& e) {
                     Logger::log(Logger::Level::Error, 
                         "Metadata error: " + std::string(e.what()));
-                    throw;
+                    throw std::runtime_error("Matadata parse error");
                 }
             }
 
@@ -81,8 +78,6 @@ namespace kuro {
                 std::ostringstream ss;
                 ss << "USER_ID:" << client.id
                    << "\nAGENT_TYPE:" << client.agent_type
-                   << "\nMAX_MESSAGE_SIZE:" << client.max_message_size
-                   << "\nALLOW_RAW_TCP:" << client.allow_raw_tcp
                    << "\nCONTENT:" << response << "\r\n\r\n";
                 return ss.str();
             }
